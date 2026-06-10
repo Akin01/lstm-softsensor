@@ -541,30 +541,54 @@ figcaption {
 
 @media (max-width: 640px) {
   .nav {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 14px;
-    padding: 16px;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    justify-content: space-between;
+    padding: 14px 12px;
   }
 
   .brand {
-    text-align: center;
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    text-align: left;
+    white-space: nowrap;
   }
 
   .nav-right {
     align-items: center;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
+    flex: 1 1 auto;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    justify-content: flex-end;
+    min-width: 0;
+    width: auto;
   }
 
   .nav-links {
-    gap: 8px 14px;
-    width: 100%;
+    flex: 0 1 auto;
+    flex-wrap: nowrap;
+    font-size: 0.78rem;
+    gap: 8px;
+    min-width: 0;
+    width: auto;
   }
 
   .nav-links a {
     padding: 4px 0;
+    white-space: nowrap;
+  }
+
+  .locale-switch {
+    flex: 0 0 auto;
+    padding: 2px;
+  }
+
+  .locale-button {
+    font-size: 0.7rem;
+    padding: 6px 7px;
   }
 
   .metrics {
