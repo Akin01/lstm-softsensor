@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Soft Sensor LSTM untuk Estimasi Kandungan Etana</title>
+    <meta
+      name="description"
+      content="Halaman proyek untuk soft sensor berbasis LSTM yang mengestimasi kandungan etana pada kolom deethanizer menggunakan data historis proses."
+    />
+    <meta property="og:title" content="Soft Sensor LSTM untuk Estimasi Kandungan Etana" />
+    <meta
+      property="og:description"
+      content="Halaman proyek untuk RTA: soft sensor LSTM untuk estimasi C2H6 di Plant 3 Train G."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:navLabel">
+        <a class="brand" href="#top" aria-label="Beranda LSTM Soft Sensor" data-i18n="brandText" data-i18n-html data-i18n-attr="aria-label:brandLabel">LSTM <em>Soft Sensor</em></a>
+        <div class="nav-right">
+          <div class="nav-links">
+            <a href="#abstract" data-i18n="navAbstract">Intisari</a>
+            <a href="#results" data-i18n="navResults">Hasil</a>
+            <a href="#artifacts" data-i18n="navArtifacts">Artefak</a>
+          </div>
+          <div class="locale-switch" aria-label="Pilihan bahasa" data-i18n-attr="aria-label:localeLabel">
+            <button type="button" class="locale-button" data-locale="en">EN</button>
+            <button type="button" class="locale-button" data-locale="id">ID</button>
+          </div>
+        </div>
+      </nav>
+
+      <section id="top" class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="heroEyebrow">Halaman proyek penelitian</p>
+          <h1 data-i18n="title" data-i18n-html>Pengembangan <em>Soft Sensor</em> Berbasis LSTM untuk Estimasi Kandungan Etana pada Unit <em>Deethanizer Column</em> di <em>Plant</em> 3 <em>Train</em> G</h1>
+          <p class="authors">Ainul Yaqin · Nazrul Effendy · Dwi Joko Suroso</p>
+          <div class="actions paper-links" aria-label="Tautan RTA dan proyek" data-i18n-attr="aria-label:heroLinksLabel">
+            <a class="button primary" href="assets/RTA-443607-Ainul-Yaqin.pdf" target="_blank" rel="noopener">
+              <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                <path d="M6 2h8l4 4v16H6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                <path d="M14 2v5h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                <path d="M8 15h8M8 18h5M8 11h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+              <span>RTA</span>
+            </a>
+            <a class="button ghost" href="https://github.com/Akin01/lstm-softsensor" target="_blank" rel="noopener">
+              <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                <path fill="currentColor" d="M12 .7a11.3 11.3 0 0 0-3.58 22.02c.56.1.76-.24.76-.54v-2.02c-3.08.67-3.73-1.31-3.73-1.31-.5-1.28-1.23-1.62-1.23-1.62-1-.69.08-.68.08-.68 1.11.08 1.7 1.15 1.7 1.15.99 1.69 2.59 1.2 3.22.92.1-.72.39-1.2.7-1.48-2.46-.28-5.04-1.23-5.04-5.48 0-1.21.43-2.2 1.14-2.98-.11-.28-.49-1.41.11-2.94 0 0 .93-.3 3.05 1.14A10.6 10.6 0 0 1 12 6.52c.94 0 1.89.13 2.78.38 2.12-1.44 3.05-1.14 3.05-1.14.6 1.53.22 2.66.11 2.94.71.78 1.14 1.77 1.14 2.98 0 4.26-2.59 5.2-5.06 5.47.4.35.75 1.03.75 2.08v2.95c0 .3.2.65.77.54A11.3 11.3 0 0 0 12 .7Z" />
+              </svg>
+              <span>Github</span>
+            </a>
+          </div>
+          <p class="summary" data-i18n="summary" data-i18n-html>
+            <em>Soft sensor</em> berbasis LSTM untuk mengestimasi kandungan etana (C2H6) dari data historis proses <em>deethanizer</em>
+            dengan pra-pemrosesan deret waktu kronologis dan pemodelan berbasis <em>sequence</em>.
+          </p>
+        </div>
+
+        <aside class="metric-card" aria-label="Metrik model terbaik" data-i18n-attr="aria-label:metricLabel">
+          <p class="card-title" data-i18n="metricTitle" data-i18n-html>Performa terbaik pada data uji</p>
+          <dl class="metrics">
+            <div><dt>R²</dt><dd>0.9121</dd></div>
+            <div><dt>RMSE</dt><dd>5.1981</dd></div>
+            <div><dt>MAE</dt><dd>2.7517</dd></div>
+            <div><dt>Bias</dt><dd>1.2557</dd></div>
+          </dl>
+          <p class="note" data-i18n="metricNote" data-i18n-html>Model: LSTM 2 layer, <strong><em>dropout 0,2</em></strong>, ukuran <em>hidden size</em> 32, <em>lookback</em> 36 timestep.</p>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="view-switch-section" aria-label="Pilihan tampilan" data-i18n-attr="aria-label:viewSwitchLabel">
+        <div class="view-switch" role="tablist" aria-label="Pilihan tampilan" data-i18n-attr="aria-label:viewSwitchLabel">
+          <button type="button" class="view-button" role="tab" data-view="overview" data-i18n="overviewLabel">Ringkasan</button>
+          <button type="button" class="view-button" role="tab" data-view="detail" data-i18n="detailLabel">Detail</button>
+        </div>
+      </section>
+
+      <div class="view-panel is-active" data-view-panel="overview">
+        <section class="section" id="abstract">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="abstractEyebrow">Intisari</p>
+            <h2 data-i18n="abstractTitle">Estimasi kandungan etana secara kontinu dari data proses</h2>
+          </div>
+          <div class="content-grid">
+            <p data-i18n="abstractBody1" data-i18n-html>
+              PT Badak LNG Bontang menghadapi perubahan komposisi gas umpan setelah penambahan gas <em>lean</em> dari Lapangan
+              Merakes. Pengukuran Gas Chromatograph tetap penting, tetapi jeda analisis dan kebutuhan pemeliharaan
+              menimbulkan kebutuhan estimator berbasis data yang lebih kontinu.
+            </p>
+            <p data-i18n="abstractBody2" data-i18n-html>
+              Penelitian ini mengembangkan <em>Soft Sensor Long Short-Term Memory</em> (LSTM) untuk mengestimasi kandungan etana
+              pada <em>Deethanizer Column</em> <em>Plant</em> 3 <em>Train</em> G. Model menggunakan 2.057 observasi kronologis dari 17 Maret 2022
+              hingga 31 Januari 2024 dengan 13 variabel proses sebagai masukan.
+            </p>
+          </div>
+        </section>
+
+        <section class="section alt" id="method">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="methodEyebrow">Metode</p>
+            <h2 data-i18n="methodTitle" data-i18n-html>Pra-pemrosesan kronologis dan pemodelan <em>sequence</em> LSTM</h2>
+          </div>
+          <div class="cards three">
+            <article>
+              <h3 data-i18n="dataTitle">Data</h3>
+              <p data-i18n="dataBody" data-i18n-html>2.057 observasi, 13 variabel masukan, dan satu target: C2H6. Urutan waktu dipertahankan dari awal hingga akhir.</p>
+            </article>
+            <article>
+              <h3 data-i18n="preprocessingTitle">Pra-pemrosesan</h3>
+              <p data-i18n="preprocessingBody" data-i18n-html>Celah pada fitur proses diisi dengan interpolasi linear dan <em>backward/forward fill</em>. Nilai target tidak diimputasi.</p>
+            </article>
+            <article>
+              <h3 data-i18n="trainingTitle">Pelatihan</h3>
+              <p data-i18n="trainingBody" data-i18n-html>Split kronologis 70/15/15, optimizer <em>Adam</em>, <em>early stopping</em>, dan <em>checkpoint</em> model berdasarkan validasi terbaik.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="results">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="resultsEyebrow">Hasil</p>
+            <h2 data-i18n="resultsTitle" data-i18n-html>LSTM terpilih mampu mengikuti tren utama C2H6 pada data uji</h2>
+          </div>
+          <div class="figure-grid">
+            <figure>
+              <img src="assets/gambar-5-4-aktual-vs-prediksi-test.png" alt="Aktual versus prediksi C2H6 pada data uji" data-i18n-attr="alt:figTestAlt" />
+              <figcaption data-i18n="figTestCaption" data-i18n-html>Data uji: C2H6 aktual dibandingkan prediksi LSTM.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/gambar-5-2-perbandingan-metrik-kandidat.png" alt="Perbandingan R kuadrat pada eksperimen kandidat" data-i18n-attr="alt:figCandidateAlt" />
+              <figcaption data-i18n="figCandidateCaption" data-i18n-html>Perbandingan kandidat berdasarkan R² validasi dan uji.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/gambar-5-3-aktual-vs-prediksi-validation.png" alt="Aktual versus prediksi C2H6 pada data validasi" data-i18n-attr="alt:figValidationAlt" />
+              <figcaption data-i18n="figValidationCaption" data-i18n-html>Data validasi: C2H6 aktual dibandingkan prediksi LSTM.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/gambar-5-6-residual-test.png" alt="Residual data uji terhadap waktu dan histogram" data-i18n-attr="alt:figResidualAlt" />
+              <figcaption data-i18n="figResidualCaption" data-i18n-html>Perilaku residual pada data uji.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="section alt" id="artifacts">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="artifactsEyebrow">Artefak</p>
+            <h2 data-i18n="artifactsTitle">Baca RTA dan tinjau repositori proyek</h2>
+          </div>
+          <div class="artifact-panel">
+            <div>
+              <h3>RTA</h3>
+              <p data-i18n="rtaBody">Buka PDF di tab baru untuk membaca di browser, atau unduh salinan lokal.</p>
+            </div>
+            <div class="actions compact">
+              <a class="button primary" href="assets/RTA-443607-Ainul-Yaqin.pdf" target="_blank" rel="noopener">
+                <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                  <path d="M6 2h8l4 4v16H6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                  <path d="M14 2v5h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                  <path d="M8 15h8M8 18h5M8 11h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                <span data-i18n="openPdf">Buka</span>
+              </a>
+              <a class="button secondary" href="assets/RTA-443607-Ainul-Yaqin.pdf" download>
+                <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                  <path d="M12 3v11m0 0 4-4m-4 4-4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span data-i18n="download">Unduh</span>
+              </a>
+            </div>
+          </div>
+          <div class="artifact-panel">
+            <div>
+              <h3 data-i18n="repoTitle">Repositori kode</h3>
+              <p data-i18n="repoBody">Kode pelatihan, konfigurasi eksperimen, dan catatan reproduksibilitas tersedia di GitHub.</p>
+            </div>
+            <div class="actions compact">
+              <a class="button ghost" href="https://github.com/Akin01/lstm-softsensor" target="_blank" rel="noopener">
+                <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                  <path fill="currentColor" d="M12 .7a11.3 11.3 0 0 0-3.58 22.02c.56.1.76-.24.76-.54v-2.02c-3.08.67-3.73-1.31-3.73-1.31-.5-1.28-1.23-1.62-1.23-1.62-1-.69.08-.68.08-.68 1.11.08 1.7 1.15 1.7 1.15.99 1.69 2.59 1.2 3.22.92.1-.72.39-1.2.7-1.48-2.46-.28-5.04-1.23-5.04-5.48 0-1.21.43-2.2 1.14-2.98-.11-.28-.49-1.41.11-2.94 0 0 .93-.3 3.05 1.14A10.6 10.6 0 0 1 12 6.52c.94 0 1.89.13 2.78.38 2.12-1.44 3.05-1.14 3.05-1.14.6 1.53.22 2.66.11 2.94.71.78 1.14 1.77 1.14 2.98 0 4.26-2.59 5.2-5.06 5.47.4.35.75 1.03.75 2.08v2.95c0 .3.2.65.77.54A11.3 11.3 0 0 0 12 .7Z" />
+                </svg>
+                <span data-i18n="viewGithub">Github</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="view-panel" data-view-panel="detail" hidden>
+        <article class="section detail-story paper-story" id="detail">
+          <header class="paper-header">
+            <p class="eyebrow" data-i18n="detailEyebrow">Versi detail</p>
+            <h2 data-i18n="detailTitle" data-i18n-html>Dari keterlambatan <em>analyzer</em> menuju <em>soft sensor</em> C2H6 yang dapat dipantau kontinu</h2>
+            <p data-i18n="detailLead" data-i18n-html>
+              Cerita penelitian ini dimulai dari masalah operasional: komposisi gas berubah, tetapi pengukuran komposisi tidak selalu tersedia seketika. <em>Soft sensor</em> dibangun sebagai jembatan antara data proses yang terus mengalir dan kebutuhan estimasi etana yang lebih cepat.
+            </p>
+          </header>
+
+          <section class="paper-section">
+            <h3 data-i18n="detailProblemTitle">Masalah proses</h3>
+            <p data-i18n="detailProblemBody1" data-i18n-html>Setelah masuknya pasokan gas <em>lean</em> dari Lapangan Merakes, komposisi gas umpan di PT Badak LNG Bontang berubah. Kandungan metana meningkat, sedangkan hidrokarbon berat seperti etana, propana, dan butana menurun. Perubahan ini membuat pemantauan kandungan etana menjadi penting untuk memahami kondisi operasi <em>deethanizer</em>.</p>
+            <p data-i18n="detailProblemBody2" data-i18n-html>Gas Chromatograph tetap menjadi instrumen referensi, tetapi pembacaan memiliki jeda analisis dan perangkat membutuhkan pemeliharaan. Ketika <em>analyzer</em> tidak tersedia, operator membutuhkan cara lain untuk memperkirakan komposisi dari sinyal proses yang tersedia secara historis dan lebih kontinu.</p>
+          </section>
+
+          <section class="paper-section">
+            <h3 data-i18n="detailIdeaTitle">Ide utama</h3>
+            <p data-i18n="detailIdeaBody" data-i18n-html>Penelitian ini memperlakukan estimasi C2H6 sebagai masalah deret waktu. Alih-alih membaca satu baris proses secara terpisah, model melihat konteks historis melalui <em>sequence</em> LSTM. Dengan cara ini, model belajar dari pola perubahan laju alir, level, tekanan, dan temperatur sebelum menghasilkan estimasi kandungan etana.</p>
+            <p data-i18n="detailIdeaCallout" data-i18n-html>Dengan demikian, tujuan penelitian diarahkan pada pembangunan baseline <em>soft sensor</em> LSTM untuk estimasi C2H6 pada <em>Deethanizer Column</em> <em>Plant</em> 3 <em>Train</em> G.</p>
+          </section>
+
+          <section class="paper-section">
+            <h3 data-i18n="detailDataTitle">Data dan pra-pemrosesan</h3>
+            <p data-i18n="detailDataBody" data-i18n-html>Dataset berisi 2.057 observasi historis dari 17 Maret 2022 sampai 31 Januari 2024. Model menggunakan 13 variabel proses sebagai masukan dan C2H6 sebagai target. Urutan waktu dipertahankan, fitur proses diisi dengan interpolasi linear dan isian tepi, sedangkan target tidak diimputasi.</p>
+            <p data-i18n="detailDataPoint1" data-i18n-html>Pembagian data dilakukan secara kronologis dengan proporsi 70% untuk train, 15% untuk <em>validation</em>, dan 15% untuk <em>test</em>, sehingga evaluasi dilakukan pada periode setelah data pelatihan.</p>
+            <p data-i18n="detailDataPoint2" data-i18n-html>Normalisasi dihitung hanya dari data train agar statistik dari <em>validation</em> dan <em>test</em> tidak memengaruhi proses pelatihan.</p>
+            <p data-i18n="detailDataPoint3" data-i18n-html>Setelah pra-pemrosesan, data tabular dikonversi menjadi <em>sequence</em> menggunakan sliding window; konfigurasi terbaik menggunakan konteks historis sepanjang 36 timestep.</p>
+          </section>
+
+          <section class="paper-section">
+            <h3 data-i18n="detailExperimentTitle">Eksperimen model</h3>
+            <p data-i18n="detailExperimentBody" data-i18n-html>Eksperimen dimulai dari konfigurasi dasar LSTM, lalu membandingkan kandidat pra-pemrosesan dan hiperparameter: strategi imputasi fitur, panjang <em>lookback</em>, <em>hidden size</em>, jumlah layer, <em>dropout</em>, <em>learning rate</em>, <em>batch size</em>, dan <em>weight decay</em>. Pemilihan model dilakukan menggunakan performa <em>validation</em>, sementara <em>test</em> disimpan sebagai <em>holdout</em> akhir.</p>
+            <figure class="paper-figure">
+              <img src="assets/gambar-5-2-perbandingan-metrik-kandidat.png" alt="Perbandingan metrik kandidat eksperimen" data-i18n-attr="alt:detailExperimentAlt" />
+              <figcaption data-i18n="detailExperimentCaption" data-i18n-html>Kandidat dua layer dengan <strong><em>dropout 0,2</em></strong> memberikan performa <em>validation</em> terbaik dan tetap kuat pada <em>test</em>.</figcaption>
+            </figure>
+          </section>
+
+          <section class="paper-section">
+            <h3 data-i18n="detailResultTitle">Hasil utama</h3>
+            <p data-i18n="detailResultBody" data-i18n-html>Konfigurasi terbaik menggunakan LSTM dua layer, <strong><em>dropout 0,2</em></strong>, <em>hidden size</em> 32, dan <em>lookback</em> 36 timestep. Pada data <em>test</em>, model mencapai R² 0,9121, RMSE 5,1981, MAE 2,7517, dan bias 1,2557. Grafik aktual-versus-prediksi menunjukkan model mengikuti tren utama C2H6, walaupun masih melemah saat nilai aktual berubah tajam.</p>
+            <figure class="paper-figure">
+              <img src="assets/gambar-5-4-aktual-vs-prediksi-test.png" alt="Aktual dan prediksi C2H6 pada data uji" data-i18n-attr="alt:detailResultAlt" />
+              <figcaption data-i18n="detailResultCaption" data-i18n-html>Pada data uji, prediksi LSTM mengikuti pola utama C2H6 tetapi masih memiliki deviasi pada periode target sangat rendah atau berubah mendadak.</figcaption>
+            </figure>
+          </section>
+
+          <section class="paper-section">
+            <h3 data-i18n="detailLimitTitle">Makna dan batasan</h3>
+            <p data-i18n="detailLimitBody" data-i18n-html>Hasil ini menunjukkan LSTM layak dipertimbangkan sebagai baseline <em>soft sensor</em> atau alat bantu monitoring. Namun, model belum dapat langsung menggantikan <em>analyzer</em>. Implementasi operasional masih membutuhkan validasi <em>real-time</em>, pembandingan terhadap toleransi proses, dan kajian bersama <em>engineer</em> operasi pada periode transient atau anomali.</p>
+            <p data-i18n="detailLimitCallout" data-i18n-html>Secara praktis, model ini lebih tepat diposisikan sebagai <em>decision-support</em> awal, bukan sebagai pengganti final <em>analyzer</em> tanpa validasi lanjutan.</p>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p data-i18n="footer">Copyright © 2026 Ainul Yaqin.</p>
+    </footer>
+
+    <script>
+      const locales = {
+        id: {
+          documentTitle: "Soft Sensor LSTM untuk Estimasi Kandungan Etana",
+          metaDescription: "Halaman proyek untuk soft sensor berbasis LSTM yang mengestimasi kandungan etana pada kolom deethanizer menggunakan data historis proses.",
+          ogDescription: "Halaman proyek untuk RTA: soft sensor LSTM untuk estimasi C2H6 di Plant 3 Train G.",
+          navLabel: "Navigasi utama",
+          brandLabel: "Beranda LSTM Soft Sensor",
+          brandText: "LSTM <em>Soft Sensor</em>",
+          localeLabel: "Pilihan bahasa",
+          viewSwitchLabel: "Pilihan tampilan",
+          overviewLabel: "Ringkasan",
+          detailLabel: "Detail",
+          navAbstract: "Intisari",
+          navResults: "Hasil",
+          navArtifacts: "Artefak",
+          heroEyebrow: "Halaman proyek penelitian",
+          title: "Pengembangan <em>Soft Sensor</em> Berbasis LSTM untuk Estimasi Kandungan Etana pada Unit <em>Deethanizer Column</em> di <em>Plant</em> 3 <em>Train</em> G",
+          heroLinksLabel: "Tautan RTA dan proyek",
+          summary: "<em>Soft sensor</em> berbasis <strong>LSTM</strong> untuk mengestimasi kandungan <strong>etana (C2H6)</strong> dari data historis proses <em>deethanizer</em> dengan <strong>pra-pemrosesan deret waktu kronologis</strong> dan pemodelan berbasis <em>sequence</em>.",
+          metricLabel: "Metrik model terbaik",
+          metricTitle: "Performa terbaik pada data uji",
+          metricNote: "Model: <strong>LSTM 2 layer</strong>, <strong><em>dropout 0,2</em></strong>, ukuran <em>hidden size</em> 32, <strong><em>lookback</em> 36 timestep</strong>.",
+          abstractEyebrow: "Intisari",
+          abstractTitle: "Estimasi kandungan etana secara kontinu dari data proses",
+          abstractBody1: "PT Badak LNG Bontang menghadapi <strong>perubahan komposisi gas umpan</strong> setelah penambahan gas <em>lean</em> dari Lapangan Merakes. Pengukuran <strong>Gas Chromatograph</strong> tetap penting, tetapi jeda analisis dan kebutuhan pemeliharaan menimbulkan kebutuhan estimator berbasis data yang lebih kontinu.",
+          abstractBody2: "Penelitian ini mengembangkan <strong><em>Soft Sensor Long Short-Term Memory</em> (LSTM)</strong> untuk mengestimasi kandungan etana pada <em>Deethanizer Column</em> <em>Plant</em> 3 <em>Train</em> G. Model menggunakan <strong>2.057 observasi kronologis</strong> dari 17 Maret 2022 hingga 31 Januari 2024 dengan <strong>13 variabel proses</strong> sebagai masukan.",
+          methodEyebrow: "Metode",
+          methodTitle: "Pra-pemrosesan kronologis dan pemodelan <em>sequence</em> LSTM",
+          dataTitle: "Data",
+          dataBody: "<strong>2.057 observasi</strong>, <strong>13 variabel masukan</strong>, dan satu target: <strong>C2H6</strong>. Urutan waktu dipertahankan dari awal hingga akhir.",
+          preprocessingTitle: "Pra-pemrosesan",
+          preprocessingBody: "Celah pada fitur proses diisi dengan <strong>interpolasi linear</strong> dan <em>backward/forward fill</em>. <strong>Nilai target tidak diimputasi</strong>.",
+          trainingTitle: "Pelatihan",
+          trainingBody: "<strong>Split kronologis 70/15/15</strong>, optimizer <em>Adam</em>, <em>early stopping</em>, dan <em>checkpoint</em> model berdasarkan validasi terbaik.",
+          resultsEyebrow: "Hasil",
+          resultsTitle: "LSTM terpilih mampu mengikuti tren utama C2H6 pada data uji",
+          figTestAlt: "Aktual versus prediksi C2H6 pada data uji",
+          figTestCaption: "Data uji: C2H6 aktual dibandingkan prediksi LSTM.",
+          figCandidateAlt: "Perbandingan R kuadrat pada eksperimen kandidat",
+          figCandidateCaption: "Perbandingan kandidat berdasarkan R² validasi dan uji.",
+          figValidationAlt: "Aktual versus prediksi C2H6 pada data validasi",
+          figValidationCaption: "Data validasi: C2H6 aktual dibandingkan prediksi LSTM.",
+          figResidualAlt: "Residual data uji terhadap waktu dan histogram",
+          figResidualCaption: "Perilaku residual pada data uji.",
+          artifactsEyebrow: "Artefak",
+          artifactsTitle: "Baca RTA dan tinjau repositori proyek",
+          rtaBody: "Buka PDF di tab baru untuk membaca di browser, atau unduh salinan lokal.",
+          openPdf: "Buka",
+          download: "Unduh",
+          repoTitle: "Repositori kode",
+          repoBody: "Kode pelatihan, konfigurasi eksperimen, dan catatan reproduksibilitas tersedia di GitHub.",
+          viewGithub: "Github",
+          detailEyebrow: "Versi detail",
+          detailTitle: "Dari keterlambatan <em>analyzer</em> menuju <em>soft sensor</em> C2H6 yang dapat dipantau kontinu",
+          detailLead: "Cerita penelitian ini dimulai dari masalah operasional: <strong>komposisi gas berubah</strong>, tetapi pengukuran komposisi tidak selalu tersedia seketika. <strong><em>Soft sensor</em></strong> dibangun sebagai jembatan antara data proses yang terus mengalir dan kebutuhan estimasi etana yang lebih cepat.",
+          detailProblemTitle: "Masalah proses",
+          detailProblemBody1: "Setelah masuknya pasokan gas <em>lean</em> dari Lapangan Merakes, <strong>komposisi gas umpan</strong> di PT Badak LNG Bontang berubah. Kandungan metana meningkat, sedangkan hidrokarbon berat seperti <strong>etana</strong>, propana, dan butana menurun. Perubahan ini membuat pemantauan kandungan etana menjadi penting untuk memahami kondisi operasi <em>deethanizer</em>.",
+          detailProblemBody2: "<strong>Gas Chromatograph</strong> tetap menjadi instrumen referensi, tetapi pembacaan memiliki <strong>jeda analisis</strong> dan perangkat membutuhkan pemeliharaan. Ketika <em>analyzer</em> tidak tersedia, operator membutuhkan cara lain untuk memperkirakan komposisi dari sinyal proses yang tersedia secara historis dan lebih kontinu.",
+          detailIdeaTitle: "Ide utama",
+          detailIdeaBody: "Penelitian ini memperlakukan estimasi <strong>C2H6 sebagai masalah deret waktu</strong>. Alih-alih membaca satu baris proses secara terpisah, model melihat <strong>konteks historis</strong> melalui <em>sequence</em> LSTM. Dengan cara ini, model belajar dari pola perubahan laju alir, level, tekanan, dan temperatur sebelum menghasilkan estimasi kandungan etana.",
+          detailIdeaCallout: "Dengan demikian, tujuan penelitian diarahkan pada pembangunan <strong>baseline <em>soft sensor</em> LSTM</strong> untuk estimasi <strong>C2H6</strong> pada <em>Deethanizer Column</em> <em>Plant</em> 3 <em>Train</em> G.",
+          detailDataTitle: "Data dan pra-pemrosesan",
+          detailDataBody: "Dataset berisi <strong>2.057 observasi historis</strong> dari 17 Maret 2022 sampai 31 Januari 2024. Model menggunakan <strong>13 variabel proses</strong> sebagai masukan dan <strong>C2H6</strong> sebagai target. Urutan waktu dipertahankan, fitur proses diisi dengan interpolasi linear dan isian tepi, sedangkan <strong>target tidak diimputasi</strong>.",
+          detailDataPoint1: "Pembagian data dilakukan secara <strong>kronologis</strong> dengan proporsi <strong>70% train, 15% <em>validation</em>, dan 15% <em>test</em></strong>, sehingga evaluasi dilakukan pada periode setelah data pelatihan.",
+          detailDataPoint2: "<strong>Normalisasi dihitung hanya dari data train</strong> agar statistik dari <em>validation</em> dan <em>test</em> tidak memengaruhi proses pelatihan.",
+          detailDataPoint3: "Setelah pra-pemrosesan, data tabular dikonversi menjadi <em>sequence</em> menggunakan <strong>sliding window</strong>; konfigurasi terbaik menggunakan konteks historis sepanjang <strong>36 timestep</strong>.",
+          detailExperimentTitle: "Eksperimen model",
+          detailExperimentBody: "Eksperimen dimulai dari konfigurasi dasar <strong>LSTM</strong>, lalu membandingkan kandidat pra-pemrosesan dan hiperparameter: strategi imputasi fitur, panjang <em>lookback</em>, <em>hidden size</em>, jumlah layer, <em>dropout</em>, <em>learning rate</em>, <em>batch size</em>, dan <em>weight decay</em>. Pemilihan model dilakukan menggunakan <strong>performa <em>validation</em></strong>, sementara <em>test</em> disimpan sebagai <strong><em>holdout</em> akhir</strong>.",
+          detailExperimentAlt: "Perbandingan metrik kandidat eksperimen",
+          detailExperimentCaption: "Kandidat <strong>dua layer dengan <em>dropout 0,2</em></strong> memberikan performa <em>validation</em> terbaik dan tetap kuat pada <em>test</em>.",
+          detailResultTitle: "Hasil utama",
+          detailResultBody: "Konfigurasi terbaik menggunakan <strong>LSTM dua layer</strong>, <strong><em>dropout 0,2</em></strong>, <em>hidden size</em> 32, dan <strong><em>lookback</em> 36 timestep</strong>. Pada data <em>test</em>, model mencapai <strong>R² 0,9121</strong>, RMSE 5,1981, MAE 2,7517, dan bias 1,2557. Grafik aktual-versus-prediksi menunjukkan model mengikuti <strong>tren utama C2H6</strong>, walaupun masih melemah saat nilai aktual berubah tajam.",
+          detailResultAlt: "Aktual dan prediksi C2H6 pada data uji",
+          detailResultCaption: "Pada data uji, prediksi <strong>LSTM mengikuti pola utama C2H6</strong> tetapi masih memiliki deviasi pada periode target sangat rendah atau berubah mendadak.",
+          detailLimitTitle: "Makna dan batasan",
+          detailLimitBody: "Hasil ini menunjukkan <strong>LSTM layak dipertimbangkan sebagai baseline <em>soft sensor</em></strong> atau alat bantu monitoring. Namun, model belum dapat langsung menggantikan <em>analyzer</em>. Implementasi operasional masih membutuhkan <strong>validasi <em>real-time</em></strong>, pembandingan terhadap toleransi proses, dan kajian bersama <em>engineer</em> operasi pada periode transient atau anomali.",
+          detailLimitCallout: "Secara praktis, model ini lebih tepat diposisikan sebagai <strong><em>decision-support</em> awal</strong>, bukan sebagai pengganti final <em>analyzer</em> tanpa validasi lanjutan.",
+          footer: "Copyright © 2026 Ainul Yaqin."
+        },
+        en: {
+          documentTitle: "LSTM Soft Sensor for Ethane Estimation",
+          metaDescription: "Project page for an LSTM-based soft sensor that estimates ethane content in a deethanizer column using historical process data.",
+          ogDescription: "Project page for the RTA paper: LSTM soft sensor for C2H6 estimation at Plant 3 Train G.",
+          navLabel: "Primary navigation",
+          brandLabel: "LSTM Soft Sensor home",
+          brandText: "LSTM Soft Sensor",
+          localeLabel: "Language selection",
+          viewSwitchLabel: "View selection",
+          overviewLabel: "Overview",
+          detailLabel: "Detail",
+          navAbstract: "Abstract",
+          navResults: "Results",
+          navArtifacts: "Artifacts",
+          heroEyebrow: "Research project page",
+          title: "Development of an LSTM-Based Soft Sensor for Ethane Content Estimation in the Deethanizer Column at Plant 3 Train G",
+          heroLinksLabel: "RTA and project links",
+          summary: "An <strong>LSTM-based soft sensor</strong> for estimating <strong>ethane (C2H6)</strong> content from historical deethanizer process data with <strong>chronological time-series preprocessing</strong> and sequence modeling.",
+          metricLabel: "Best model metrics",
+          metricTitle: "Best <em>test</em> performance",
+          metricNote: "Model: <strong>2-layer LSTM</strong>, <em>dropout</em> 0.2, <em>hidden size</em> 32, <strong><em>lookback</em> 36 timesteps</strong>.",
+          abstractEyebrow: "Abstract",
+          abstractTitle: "Continuous ethane estimation from process data",
+          abstractBody1: "PT Badak LNG Bontang faces <strong>feed-gas composition changes</strong> after <em>lean</em>-gas additions from the Merakes Field. <strong>Gas Chromatograph</strong> measurements remain important, but <em>analyzer</em> latency and maintenance create a need for a more continuous data-driven estimator.",
+          abstractBody2: "This work develops a <strong>Long Short-Term Memory (LSTM) soft sensor</strong> to estimate ethane content in the Plant 3 Train G Deethanizer Column. The model uses <strong>2,057 chronological observations</strong> from March 17, 2022 to January 31, 2024 with <strong>13 process variables</strong> as inputs.",
+          methodEyebrow: "Method",
+          methodTitle: "Chronological preprocessing and LSTM sequence modeling",
+          dataTitle: "Data",
+          dataBody: "<strong>2,057 observations</strong>, <strong>13 input variables</strong>, and one target: <strong>C2H6</strong>. Time order is preserved end-to-end.",
+          preprocessingTitle: "Preprocessing",
+          preprocessingBody: "Process-feature gaps are filled with <strong>linear interpolation</strong> plus forward/backward fill. <strong>Target values are not imputed</strong>.",
+          trainingTitle: "Training",
+          trainingBody: "<strong>70/15/15 chronological split</strong>, Adam optimizer, early stopping, and validation-selected model checkpoint.",
+          resultsEyebrow: "Results",
+          resultsTitle: "The selected LSTM tracks the main C2H6 trend on <em>holdout</em> data",
+          figTestAlt: "Actual versus predicted C2H6 on the test split",
+          figTestCaption: "<em>Test</em> split: actual C2H6 compared with LSTM prediction.",
+          figCandidateAlt: "R squared comparison across candidate experiments",
+          figCandidateCaption: "Candidate comparison by <em>validation</em> and <em>test</em> R².",
+          figValidationAlt: "Actual versus predicted C2H6 on the validation split",
+          figValidationCaption: "<em>Validation</em> split: actual C2H6 compared with LSTM prediction.",
+          figResidualAlt: "Test residuals over time and histogram",
+          figResidualCaption: "Residual behavior on the <em>test</em> split.",
+          artifactsEyebrow: "Artifacts",
+          artifactsTitle: "Read the RTA and inspect the project repository",
+          rtaBody: "Open the PDF in a new tab for browser reading, or download a local copy.",
+          openPdf: "Open",
+          download: "Download",
+          repoTitle: "Code repository",
+          repoBody: "Training code, experiment configuration, and reproducibility notes are available on GitHub.",
+          viewGithub: "Github",
+          detailEyebrow: "Detailed version",
+          detailTitle: "From <em>analyzer</em> latency to a continuously monitored C2H6 soft sensor",
+          detailLead: "The research story starts with an operational gap: <strong>gas composition changes</strong>, but composition measurements are not always available immediately. The <strong>soft sensor</strong> bridges continuously recorded process data and faster ethane estimation.",
+          detailProblemTitle: "Process problem",
+          detailProblemBody1: "After <em>lean</em> gas from the Merakes Field entered the feed mix, PT Badak LNG Bontang faced a <strong>shift in gas composition</strong>. Methane increased while heavier hydrocarbons such as <strong>ethane</strong>, propane, and butane decreased. This made ethane monitoring important for understanding deethanizer operating conditions.",
+          detailProblemBody2: "The <strong>Gas Chromatograph</strong> remains the reference instrument, but its readings have <strong>analytical latency</strong> and the hardware requires maintenance. When the <em>analyzer</em> is unavailable, operators need another way to estimate composition from historical and more continuous process signals.",
+          detailIdeaTitle: "Core idea",
+          detailIdeaBody: "This work treats <strong>C2H6 estimation as a time-series problem</strong>. Instead of reading each process row independently, the model sees <strong>historical context</strong> through LSTM sequences. It learns patterns in flow, level, pressure, and temperature changes before producing an ethane estimate.",
+          detailIdeaCallout: "The research objective is therefore to build an <strong>LSTM soft-sensor baseline</strong> for <strong>C2H6 estimation</strong> in the Plant 3 Train G Deethanizer Column.",
+          detailDataTitle: "Data and preprocessing",
+          detailDataBody: "The dataset contains <strong>2,057 historical observations</strong> from March 17, 2022 to January 31, 2024. The model uses <strong>13 process variables</strong> as inputs and <strong>C2H6</strong> as the target. Time order is preserved, process features are filled with linear interpolation and edge fills, and <strong>target values are not imputed</strong>.",
+          detailDataPoint1: "The data split is <strong>chronological</strong>, with <strong>70% train, 15% <em>validation</em>, and 15% <em>test</em></strong>, so evaluation is performed on periods after the training data.",
+          detailDataPoint2: "<strong>Normalization is fitted only on train data</strong> so <em>validation</em> and <em>test</em> statistics do not influence training.",
+          detailDataPoint3: "After preprocessing, the tabular data is converted into sequences with a <strong>sliding window</strong>; the best configuration uses <strong>36 timesteps</strong> of historical context.",
+          detailExperimentTitle: "Model experiments",
+          detailExperimentBody: "Experiments start from a baseline <strong>LSTM</strong>, then compare preprocessing and hyperparameter candidates: feature-imputation strategy, <em>lookback</em> length, <em>hidden size</em>, number of layers, <em>dropout</em>, <em>learning rate</em>, <em>batch size</em>, and <em>weight decay</em>. Model selection uses <strong><em>validation</em> performance</strong> while <em>test</em> data is kept as the <strong>final <em>holdout</em></strong>.",
+          detailExperimentAlt: "Candidate experiment metric comparison",
+          detailExperimentCaption: "The <strong>two-layer candidate with <em>dropout</em> 0.2</strong> gives the best <em>validation</em> performance while remaining strong on <em>test</em> data.",
+          detailResultTitle: "Main result",
+          detailResultBody: "The best configuration uses a <strong>two-layer LSTM</strong>, <em>dropout</em> 0.2, <em>hidden size</em> 32, and a <strong>36-timestep <em>lookback</em></strong>. On <em>test</em> data, the model reaches <strong>R² 0.9121</strong>, RMSE 5.1981, MAE 2.7517, and bias 1.2557. Actual-versus-prediction plots show that it follows the <strong>main C2H6 trend</strong>, although it weakens when actual values change sharply.",
+          detailResultAlt: "Actual and predicted C2H6 on test data",
+          detailResultCaption: "On <em>test</em> data, <strong>LSTM prediction follows the main C2H6 pattern</strong> but still deviates during very low or abrupt target changes.",
+          detailLimitTitle: "Meaning and limits",
+          detailLimitBody: "The result shows that <strong>LSTM is worth considering as a soft-sensor baseline</strong> or monitoring aid. However, it cannot directly replace the <em>analyzer</em> yet. Operational deployment still requires <strong><em>real-time</em> validation</strong>, comparison against process tolerances, and review with operating <em>engineers</em> during transient or anomalous periods.",
+          detailLimitCallout: "In practical terms, the model is better positioned as <strong>early <em>decision-support</em></strong>, not as a final <em>analyzer</em> replacement without further validation.",
+          footer: "Copyright © 2026 Ainul Yaqin."
+        }
+      };
+
+      const supportedLocales = new Set(["en", "id"]);
+      const supportedViews = new Set(["overview", "detail"]);
+      const url = new URL(window.location.href);
+      const requestedLocale = url.searchParams.get("lang");
+      const requestedView = url.searchParams.get("view");
+      const initialLocale = supportedLocales.has(requestedLocale) ? requestedLocale : "id";
+      const initialView = supportedViews.has(requestedView) ? requestedView : "overview";
+
+      function applyLocale(locale) {
+        const copy = locales[locale];
+        document.documentElement.lang = locale;
+        document.title = copy.documentTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", copy.metaDescription);
+        document.querySelector('meta[property="og:title"]').setAttribute("content", copy.documentTitle);
+        document.querySelector('meta[property="og:description"]').setAttribute("content", copy.ogDescription);
+
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const value = copy[element.dataset.i18n];
+          if (element.hasAttribute("data-i18n-html")) {
+            element.innerHTML = value;
+          } else {
+            element.textContent = value;
+          }
+        });
+
+        document.querySelectorAll("[data-i18n-attr]").forEach((element) => {
+          element.dataset.i18nAttr.split(",").forEach((pair) => {
+            const [attribute, key] = pair.split(":");
+            element.setAttribute(attribute, copy[key]);
+          });
+        });
+
+        document.querySelectorAll(".locale-button").forEach((button) => {
+          const active = button.dataset.locale === locale;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("lang", locale);
+        window.history.replaceState(null, "", nextUrl);
+      }
+
+      function applyView(view) {
+        document.querySelectorAll("[data-view-panel]").forEach((panel) => {
+          const active = panel.dataset.viewPanel === view;
+          panel.classList.toggle("is-active", active);
+          panel.hidden = !active;
+        });
+
+        document.querySelectorAll(".view-button").forEach((button) => {
+          const active = button.dataset.view === view;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-selected", String(active));
+          button.setAttribute("tabindex", active ? "0" : "-1");
+        });
+
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("view", view);
+        window.history.replaceState(null, "", nextUrl);
+      }
+
+      document.querySelectorAll(".locale-button").forEach((button) => {
+        button.addEventListener("click", () => applyLocale(button.dataset.locale));
+      });
+
+      document.querySelectorAll(".view-button").forEach((button) => {
+        button.addEventListener("click", () => applyView(button.dataset.view));
+      });
+
+      applyLocale(initialLocale);
+      applyView(initialView);
+    </script>
+  </body>
+</html>
